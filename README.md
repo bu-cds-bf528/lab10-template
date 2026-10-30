@@ -157,7 +157,6 @@ doesn't make a choice explicitly, note what default it relies on.
 
 | Choice | Related question(s) | Your prediction | What the workflow does | Where (process / line) |
 |---|---|---|---|---|
-
 | Bin size (`--binSize`) | 7 | | | |
 | 0–1 scaling, and what it divides by | 8–14 | | | |
 | Region the reference is computed over (window, chr19, genome) | 9, 14 | | | |
@@ -165,15 +164,15 @@ doesn't make a choice explicitly, note what default it relies on.
 
 ### Part D: Does it change the interpretation?
 
-17. What *can* you conclude from this figure, and what can't you?
+15. What *can* you conclude from this figure, and what can't you?
 
-18. What does this scaling preserve within each track, and what does it lose between
+16. What does this scaling preserve within each track, and what does it lose between
 tracks? Did changing the scaling change the *shape* of any track?
 
-19. Would the conclusion look the same at a different locus? What would you need to
+17. Would the conclusion look the same at a different locus? What would you need to
 show to make the claim genome-wide?
 
-20. Look at the paper, what did they do to follow-up on this figure?
+18. Look at the paper, what did they do to follow-up on this figure?
 
 ### Part E: Strengthening the conclusion (hypotheticals)
 
@@ -183,7 +182,7 @@ Many of these approaches can be done with DeepTools if you want to look for
 inspiration. You don't have to describe exactly how to implement it, just what
 you might do at a high-level.
 
-21. Pick one approach below. At a high level, what would you do, and which of the
+19. Pick one approach below. At a high level, what would you do, and which of the
 new choices it introduces worries you most?
 
 | Approach | What it fixes | New choices it introduces | Could they change the answer? |
@@ -226,9 +225,9 @@ directory.
 
 ### Write it up
 
-22. Name the one choice that matters most for this figure's claim, and explain why.
+20. Name the one choice that matters most for this figure's claim, and explain why.
 
-23. Sketch how you would determine that choice if you were reproducing the figure
+21. Sketch how you would determine that choice if you were reproducing the figure
 yourself. Answer in plain words: **where** would you get the data, **what format**
 is it in, and **what would you calculate**? 
 
@@ -325,47 +324,41 @@ doesn't make a choice explicitly, note what default it relies on.
 |---|---|---|---|---|
 | GC track source and window size | 4, 5, 8 | | | |
 | Gene set and one transcript per gene | 7 | | | |
-| `computeMatrix` mode | 7, 11 | | | |
-| Body length per species (`--regionBodyLength`) | 11 | | | |
-| Flanks per species (`-b` / `-a`) | 11 | | | |
-| Bin size (`--binSize`) | 11 | | | |
+| `computeMatrix` mode | 7, 10 | | | |
+| Body length per species (`--regionBodyLength`) | 10 | | | |
+| Flanks per species (`-b` / `-a`) | 10 | | | |
+| Bin size (`--binSize`) | 10 | | | |
 
 
 ### Part D: Does it change the interpretation?
 
-Look at your outputs in `results/`, and at the variants your instructor shows
-with different bin sizes, and body length scaling.
+Look at your outputs in `results/`, and at the plots generated with different 
+bin sizes, and body length scaling. The parameters are encoded in the file names.
+You can see the bin size, species, `shared` means the dm6 genes were scaled
+to the same size as the mouse. 
 
-14. Which choices changed the *shape* of the profile, and which only changed its
+11. Which choices changed the *shape* of the profile, and which only changed its
 height or smoothness?
 
-15. In Example 1, changing the scaling didn't change the shape of any track. Here,
+12. In Example 1, changing the scaling didn't change the shape of any track. Here,
 changing the bin size and body length did. What's different about these
 transformations?
 
-16. The GC track has 5 bp resolution. What does a profile with a 5 bp bin show? What
+13. The GC track has 5 bp resolution. What does a profile with a 5 bp bin show? What
 would a 1 bp bin show?
 
-17. When fly gene bodies are stretched to mouse's body length, does the profile look
+14. When fly gene bodies are stretched to mouse's body length, does the profile look
 more or less detailed? Is that detail real?
 
-18. How do you think the values for flanking (1k for dm6, 3k for mm10) were chosen?
+15. How do you think the values for flanking (1k for dm6, 3k for mm10) were chosen?
 
 ### Part E: Comparing the species fairly (hypotheticals)
 
 Suppose the authors wanted to claim that mouse promoters are more GC-enriched than
 fly promoters. As in Example 1, describe what you might do at a high level.
 
-19. The two panels use different y-axis and color ranges. What would you change so
-the species can be compared by eye, and what would that hide?
-
-20. Each genome has a different baseline GC content. How would you make "enriched"
+16. Each genome has a different baseline GC content. How would you make "enriched"
 mean the same thing in both species?
-
-21. With `scale-regions`, the x-axis is gene-relative and differs between species.
-A CpG island has roughly the same physical size in both. How could you compare the
-TSS region in real base pairs? (Hint: `reference-point` mode, or an unscaled region
-at the TSS.)
 
 ### Part F: What would you need to reproduce it?
 
@@ -385,9 +378,9 @@ Once you've filled in your table, compare it with
 
 ### Write it up
 
-22. Name the one choice that matters most for comparing the two species, and
+17. Name the one choice that matters most for comparing the two species, and
 explain why.
 
-23. Sketch how you would determine that choice if you were reproducing the figure
+18. Sketch how you would determine that choice if you were reproducing the figure
 yourself: **where** would you get the data, **what format** is it in, and **what
 would you calculate**?
