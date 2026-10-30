@@ -1,0 +1,4 @@
+name,bam
+atacseq_50k_chr19,/projectnb/bf528/materials/labs/lab10/atacseq_50k_chr19.bam
+dnaseseq_chr19,/projectnb/bf528/materials/labs/lab10/dnaseseq_chr19.bam
+faireseq_chr19,/projectnb/bf528/materials/labs/lab10/faireseq_chr19.bam
