@@ -223,6 +223,13 @@ For this first example, it will be `hg19`.
 generated from the pipeline along with the narrowPeaks files in the reference/
 directory.
 
+6. Navigate to the location depicted in the paper and see if the workflow generated
+visualizations are concordant with the papers.
+
+7. Navigate to a different location chr19:38,490,000-38,510,000. Observe how the
+scaling has again preserved the shape and the assays show concordance, but this 
+region only has peaks that were considered significant in the DNAseseq experiment.
+
 ### Write it up
 
 20. Name the one choice that matters most for this figure's claim, and explain why.
