@@ -185,9 +185,9 @@ new choices it introduces worries you most?
 
 | Approach | What it fixes | New choices it introduces | Could they change the answer? |
 |---|---|---|---|
-| **Correlation between bigwigs** (`multiBigwigSummary` → `plotCorrelation`) | Locus dependence: compares assays everywhere at once, with no scaling to choose | Genome-wide bins vs. peak regions only; bin size; Pearson vs. Spearman; log transform; how zeros are handled | **Yes.** Genome-wide bins are mostly near-zero background, which can inflate agreement; Pearson is dominated by the tallest bins. Correlation at peaks asks a different question than correlation everywhere. |
-| **Aggregate profile at a region set** (`computeMatrix` → `plotProfile`, e.g. at all DNase peaks or TSSs) | One locus → thousands; shows average peak-to-flank contrast | Which region set (whose peaks? defines the answer); flank size; normalization; mean vs. median | **Yes.** Using DNase peaks as the reference set favors DNase-like signal. |
-| **Overlap with a reference peak set** (Venn/UpSet, or ROC against DNase peaks) | Sensitivity and specificity genome-wide | Reference set treated as truth; overlap definition (1 bp vs. 50%) | **Yes.** Treating DNase as ground truth assumes the thing being tested. |
+| **Correlation between bigwigs** (`multiBigwigSummary` → `plotCorrelation`) | | | |
+| **Aggregate profile at a region set** (`computeMatrix` → `plotProfile`, e.g. at all DNase peaks or TSSs) | | | |
+| **Overlap with a reference peak set** (Venn/UpSet, or ROC against DNase peaks) | | | |
 
 ### Part F: What would you need to reproduce it?
 
