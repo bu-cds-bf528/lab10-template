@@ -115,8 +115,6 @@ to determine directly from the figure.
 | 6 | | | | |
 | 7 | | | | |
 
-Once you've filled in your sketch, compare it with the model sketch in
-[`comparison/example1/model_sketch.md`](comparison/example1/model_sketch.md).
 
 ### Part B: Available information
 
@@ -204,8 +202,6 @@ new choices it introduces worries you most?
 | | | |
 | | | |
 
-Once you've filled in your table, compare it with
-[`comparison/example1/reproduce.md`](comparison/example1/reproduce.md).
 
 ### Visualizing these tracks on the SCC
 
@@ -237,6 +233,14 @@ region only has peaks that were considered significant in the DNAseseq experimen
 21. Sketch how you would determine that choice if you were reproducing the figure
 yourself. Answer in plain words: **where** would you get the data, **what format**
 is it in, and **what would you calculate**? 
+
+### Review the questions and workflow
+
+You can copy a worked set of answers from:
+
+```
+cp -r /projectnb/bf528/materials/labs/lab10/example1 .
+```
 
 
 ## Example 2: GC/AT content near promoters across species
@@ -296,8 +300,6 @@ choices hidden in each.
 | 6 | | | | |
 | 7 | | | | |
 
-Once you've filled in your sketch, compare it with the model sketch in
-[`comparison/example2/model_sketch.md`](comparison/example2/model_sketch.md).
 
 ### Part B: Available information
 
@@ -380,9 +382,6 @@ mean the same thing in both species?
 | | | |
 | | | |
 
-Once you've filled in your table, compare it with
-[`comparison/example2/reproduce.md`](comparison/example2/reproduce.md).
-
 ### Write it up
 
 17. Name the one choice that matters most for comparing the two species, and
@@ -391,3 +390,11 @@ explain why.
 18. Sketch how you would determine that choice if you were reproducing the figure
 yourself: **where** would you get the data, **what format** is it in, and **what
 would you calculate**?
+
+### Review the questions and workflow
+
+You can copy a worked set of answers from:
+
+```
+cp -r /projectnb/bf528/materials/labs/lab10/example2 .
+```
