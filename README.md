@@ -7,6 +7,22 @@ when generating visualizations of genomic data
 - Practice how you would dissect the intent of a figure, and how to go about
 reproducing it with various levels of provided information
 
+## How this lab works
+
+For each example you are given a **working workflow** that reproduces a published
+figure. You won't need to write or debug pipeline code. The work is in predicting,
+reading, and reasoning.
+
+1. **Run the workflow.** Start it first so that it runs while you discuss.
+2. **Discuss and predict.** Decompose the figure, sketch how you would make it, and
+predict the choices the authors made.
+3. **Inspect the workflow.** Find which choices the workflow actually makes for the
+important points raised in the questions, and compare them with your predictions.
+4. **See the ramifications.** Look at your outputs and at variants made with
+different choices. Which choices change the conclusion, and which only change how
+the figure looks?
+5. **Write it up.** Name the one choice that matters most for the figure's claim
+and a sketch of how you would determine it.
 
 ## Decomposing a Figure
 
@@ -33,13 +49,22 @@ Where would you obtain it if needed?
 
 8. What would you need from the methods section to reproduce it exactly?
 
-## The deepTools command
+## Example 1: Genomic visualization of accessibility assays (Buenrostro et al 2013)
 
-Before you start, here is what the core deepTools step for each figure does at a
-high level. Each one has defaults and options that may vastly influence the 
-representation of the underlying data. 
+![buenrostro](figure1.png)
+
+You have already seen this figure in the lecture on ATACseq, and now I'm going to
+ask you how you would reproduce it and why they made the choices they did.
+
+This particular figure was not exactly described in the methods and so it's a good
+test case for thinking about all of the different assumptions and choices made
+when visualizing sequencing data.
 
 ### Example 1: `bamCoverage` (BAM → bigwig)
+
+Before you start, here is what the core deepTools step for each figure does at a
+high level. Each one has defaults and options that may vastly influence the
+representation of the underlying data.
 
 ```
 bamCoverage -b sample.bam -o sample.bw --binSize 10 --normalizeUsing CPM --extendReads 200
@@ -53,78 +78,113 @@ bamCoverage -b sample.bam -o sample.bw --binSize 10 --normalizeUsing CPM --exten
 - The output is a bigwig of coverage values along the genome. None of the
   normalization options produces a value bounded at 0–1.
 
+The above plot are bigWig representations of the read coverage from sequence
+alignments. 
 
-## Example 1: Genomic visualization of accessibility assays (Buenrostro et al 2013)
+### Run the workflow
 
-![buenrostro](figure1.png)
+Run the workflow and then move to the discussion as it runs:
 
-You have already seen this figure in the lecture on ATACseq, and now I'm going to
-ask you how you would reproduce it and why they made the choices they did. 
+```bash
+nextflow run bam_to_bigwig.nf -profile cluster,singularity
+```
 
-This particular figure was not exactly described in the methods and so it's a good
-test case for thinking about all of the different assumptions and choices made
-when visualizing sequencing data.
-
-Work through the questions below in order with your group.
+Don't open the workflow code yet. You'll inspect it after Part C.
 
 ### Part A: What is the figure trying to say?
 
 1. In one sentence, what claim does this panel support?
+
+
 2. Is this a quantitative or qualitative claim?
+
+
+### Sketch the workflow
+
+3. Describe in general terms what you would need to do to make this panel, from
+raw data to the final figure. Hidden choices are choices that you may not be able
+to determine directly from the figure.
+
+| Step | What happens | Input | Output | Hidden choices |
+|---|---|---|---|---|
+| 1 | | | | |
+| 2 | | | | |
+| 3 | | | | |
+| 4 | | | | |
+| 5 | | | | |
+| 6 | | | | |
+| 7 | | | | |
+
+Once you've filled in your sketch, compare it with the model sketch in
+[`comparison/example1/model_sketch.md`](comparison/example1/model_sketch.md).
 
 ### Part B: Available information
 
-3. What units are one each axis and what do they represent?
-4. What does the axis scale of 0-1 imply for this figure?
-5. Does the methods reveal how this figure was generated?
+4. What units are on each axis and what do they represent?
+
+5. What does the axis scale of 0-1 imply for this figure?
+
+6. Does the methods reveal how this figure was generated (https://pmc.ncbi.nlm.nih.gov/articles/PMC3959825/)?
+
+7. What choices were made that are not easily determined from the figure alone?
 
 
 ### Part C: Thinking through the assumptions
 
-5. List the ways you could produce a 0–1 axis from coverage data.
+8. List the ways you could produce a 0–1 axis from coverage data.
 
-6. For each one, is the reference **global** (computed from the whole genome or
+9. For each one, is the reference **global** (computed from the whole genome or
 library) or **local** (computed from this window)?
 
-7. Look closely at the peaks. Does any track's tallest peak reach exactly 1? Does
-every track's?
+10. Does any track's tallest peak reach exactly 1? Does every track's?
 
-8. If each track had been scaled to its genome-wide maximum, what would you expect
+11. If each track had been scaled to its genome-wide maximum, what would you expect
 an ordinary locus to look like?
 
-9. How likely is it that the genome-wide maximum of three different assays falls
+12. How likely is it that the genome-wide maximum of three different assays falls
 in this one window?
 
-10. Read the text: how did the authors choose this locus?
+13. Read the text: how did the authors choose this locus?
 
-11. Based on 8-10, which scaling does the evidence favor? How confident are you, and
+14. Based on 10–13, which scaling does the evidence favor? How confident are you, and
 could the figure alone settle it?
 
-### Part E: Does it change the interpretation?
+### Inspect the workflow
 
-12. What *can* you conclude from this figure, and what can't you?
+Now open `bam_to_bigwig.nf` (and its config). For each of the important points
+raised above, note which choice the workflow made and where. If the workflow
+doesn't make a choice explicitly, note what default it relies on.
 
-13. What does this scaling preserve within each track, and what does it lose between
-tracks?
+| Choice | Related question(s) | Your prediction | What the workflow does | Where (process / line) |
+|---|---|---|---|---|
 
-14. Would the conclusion look the same at a different locus? What would you need to
+| Bin size (`--binSize`) | 7 | | | |
+| 0–1 scaling, and what it divides by | 8–14 | | | |
+| Region the reference is computed over (window, chr19, genome) | 9, 14 | | | |
+
+
+### Part D: Does it change the interpretation?
+
+17. What *can* you conclude from this figure, and what can't you?
+
+18. What does this scaling preserve within each track, and what does it lose between
+tracks? Did changing the scaling change the *shape* of any track?
+
+19. Would the conclusion look the same at a different locus? What would you need to
 show to make the claim genome-wide?
 
-15. Look at the paper, what did they do to follow-up on this figure.
+20. Look at the paper, what did they do to follow-up on this figure?
 
-### Part F: Plan the reproduction
-
-16. What input data do you need, and in what format? Where would you get each file?
-
-### Part G: The missing sentence
-
-17. From the above questions, which details would be needed to exactly reproduce
-the figure?
-
-### Part H: Strengthening the conclusion (hypotheticals)
+### Part E: Strengthening the conclusion (hypotheticals)
 
 The figure shows one locus. Suppose the authors wanted the claim "ATAC-seq has
 signal-to-noise comparable to DNase-seq" to hold genome-wide, not just here.
+Many of these approaches can be done with DeepTools if you want to look for
+inspiration. You don't have to describe exactly how to implement it, just what
+you might do at a high-level.
+
+21. Pick one approach below. At a high level, what would you do, and which of the
+new choices it introduces worries you most?
 
 | Approach | What it fixes | New choices it introduces | Could they change the answer? |
 |---|---|---|---|
@@ -132,30 +192,53 @@ signal-to-noise comparable to DNase-seq" to hold genome-wide, not just here.
 | **Aggregate profile at a region set** (`computeMatrix` → `plotProfile`, e.g. at all DNase peaks or TSSs) | One locus → thousands; shows average peak-to-flank contrast | Which region set (whose peaks? defines the answer); flank size; normalization; mean vs. median | **Yes.** Using DNase peaks as the reference set favors DNase-like signal. |
 | **Overlap with a reference peak set** (Venn/UpSet, or ROC against DNase peaks) | Sensitivity and specificity genome-wide | Reference set treated as truth; overlap definition (1 bp vs. 50%) | **Yes.** Treating DNase as ground truth assumes the thing being tested. |
 
-### Part I: What would you need to reproduce it?
+### Part F: What would you need to reproduce it?
 
 | What you need | What we know (and from where) | Still missing or assumed |
 |---|---|---|
-| Genome build | hg19 (figure header) | — |
-| Locus | chr19 ~36,120,000–36,300,000, 19q13.12 (read off the figure) | Exact start/end coordinates |
-| ATAC-seq data | GM12878, 50,000 cells per replicate and 500 cells; GEO GSE47753 | Which replicates were used, and whether they were merged or pooled |
-| DNase-seq data | ENCODE/Duke, GM12878 (UCSC `wgEncodeOpenChromDnase`) | Which replicate or merged track; whether it was reprocessed or the ENCODE signal track was used as-is |
-| FAIRE-seq data | ENCODE/UNC, GM12878 (UCSC `wgEncodeOpenChromFaire`) | Same as DNase |
-| Histone/CTCF tracks | ENCODE, GM12878 (likely Broad histone tracks on UCSC) | Exact lab and files; how the four marks were overlaid |
-| Read processing | Paired-end ATAC-seq, aligned to hg19 (methods) | Duplicate removal; MAPQ filter; Tn5 shift; fragment vs. read coverage |
-| Coverage track (`bamCoverage`) | — | Bin size; read extension; normalization (`CPM`, `RPKM`, none); smoothing |
-| 0–1 scaling | Every track's axis runs 0–1 (figure) | What it was divided by: genome-wide max, max in this window, or something else |
-| Display | Looks like a UCSC browser screenshot (layout, gene track) | Browser windowing function (mean vs. max); smoothing; whether any track was clipped |
+| | | |
+| | | |
+| | | |
+| | | |
+| | | |
+| | | |
+| | | |
+| | | |
+
+Once you've filled in your table, compare it with
+[`comparison/example1/reproduce.md`](comparison/example1/reproduce.md).
+
+### Visualizing these tracks on the SCC
+
+1. Go to the interactive apps tab and choose the `Desktop` option.
+
+2. Note the path to your repository's `results/` folder; you'll browse to it when
+loading local files.
+
+3. Open the web browser from the dock at the bottom and navigate to `igv.org`
+
+4. To get started, you can simply choose from the `Genome` tab the appropriate genome.
+For this first example, it will be `hg19`.
+
+5. Next, use the `Tracks` tab and use `Local File` to load the bigwigs that were
+generated from the pipeline along with the narrowPeaks files in the reference/
+directory.
+
+### Write it up
+
+22. Name the one choice that matters most for this figure's claim, and explain why.
+
+23. Sketch how you would determine that choice if you were reproducing the figure
+yourself. Answer in plain words: **where** would you get the data, **what format**
+is it in, and **what would you calculate**? 
 
 
 ## Example 2: GC/AT content near promoters across species
 
 ![species](figure2.png)
 
-This figure was generated from the genomic sequence and represents the GC
-content calculated across the genome in non-overlapping windows of 5bp. The 
-figure shows a characteristic difference in GC content relative to the gene bodies
-in different species. 
+This figure was generated from the genomic sequence and shows a characteristic
+difference in GC content relative to the gene bodies in different species.
 
 ### Example 2: `computeMatrix` (bigwig + regions → matrix)
 
@@ -173,78 +256,138 @@ computeMatrix scale-regions -S GCcontent.bw -R genes.bed \
 - The matrix is then summarized by `plotProfile` (average across genes) or
   `plotHeatmap` (one row per gene).
 
+### Run the workflow
+
+Run the workflow and then move to discussing or answering the questions that follow:
+
+```bash
+nextflow run compute_matrix.nf -profile singularity,cluster
+```
+
+Don't open the workflow code yet. You'll inspect it later.
+
+### Part A: What is the figure trying to say?
+
+1. In one sentence, what claim does this figure support?
+
+
+2. Is this a quantitative or qualitative claim?
+
+
 ### Sketch the workflow
 
-Describe in general terms what you would need to do to make this figure, from
+3. Describe in general terms what you would need to do to make this figure, from
 genome sequence to the final heatmap or profile. Aim for 4–7 steps, and list the
 choices hidden in each.
 
 | Step | What happens | Input | Output | Hidden choices |
 |---|---|---|---|---|
-| 1 | Make a GC track for each species | Genome FASTA (or a precomputed track, e.g. UCSC `gc5Base`) | GC per window (bigwig) | Assembly version; window size; overlapping vs. non-overlapping windows; which coordinate a window's value is assigned to; how Ns and masked bases are handled; percent vs. fraction |
-| 2 | Define the regions | Gene annotation (GTF) for each species | Gene BED with strand | Annotation source (RefSeq, Ensembl, FlyBase); same source for both species; coding only (NM_) vs. all; one transcript per gene, and which (longest?); drop unplaced contigs |
-| 3 | Extract signal over regions | GC track + gene BED | Matrix of genes × bins | Mode (`scale-regions` vs. `reference-point`); body length per species; flank size; unscaled TSS/TES region; bin size; missing data as zero or missing; skip all-zero genes |
-| 4 | Summarize across genes | Matrix | Average profile and/or heatmap | Mean vs. median; sort order and clustering for the heatmap |
-| 5 | Set the reference | Profile per species | Comparable profiles | Absolute GC vs. centered on each genome's mean vs. relative to flanking sequence |
-| 6 | Display | Profiles and heatmaps | The figure | Shared vs. per-species y-axis or color limits (`--zMin`/`--zMax`); color map; panel layout; labeling the x-axis units (bp vs. gene-relative) |
+| 1 | | | | |
+| 2 | | | | |
+| 3 | | | | |
+| 4 | | | | |
+| 5 | | | | |
+| 6 | | | | |
+| 7 | | | | |
 
-Which steps do you expect to change the *shape* of the profile, and which only its
-height or colors?
+Once you've filled in your sketch, compare it with the model sketch in
+[`comparison/example2/model_sketch.md`](comparison/example2/model_sketch.md).
 
-### Part A: Read the axes
+### Part B: Available information
 
-1. What quantity is on the y-axis: a fraction, a percent, or something else?
-2. What's the theoretical range of that quantity?
-3. Are the y-axis ranges the same in the two species' panels? Does this affect
+4. What quantity is on the y-axis: a fraction, a percent, or something else?
+
+5. What's the theoretical range of that quantity?
+
+6. Are the y-axis ranges the same in the two species' panels? Does this affect
 our interpretation of the figure?
 
-### Part B: What's a sensible value?
+7. Which regions do you think were used for this figure?
 
-4. Before looking anything up, what would you expect GC content to be genome-wide?
-At a CpG island?
-5. Look up each genome's overall GC content. Where does that baseline fall on each
+
+### Part C: Thinking through the assumptions
+
+8. Look up each genome's overall GC content. Where does that baseline fall on each
 panel?
-6. If a value were outside 0–1, what would that tell you about how it was computed?
-7. Should GC + AT = 1 everywhere? When might it not? (Think about Ns and masked
-sequence.)
-8. If AT is roughly 1 − GC, what does plotting both add?
 
-### Part C: How was the signal made?
-
-9. The file is called `GCcontent_Mm9_50_5.bw`. What might 50 and 5 mean?
-10. What happens to the TSS spike if the windows were 500 bp instead? 5 kb?
-11. `computeMatrix` also has a `--binSize`. How many layers of smoothing are in this
-figure?
-
-### Part D: Global vs. local reference
-
-12. Is the promoter "GC-rich" compared with the whole genome, or compared with its
+9. Is the promoter "GC-rich" compared with the whole genome, or compared with its
 own neighborhood?
-13. How would the figure change if each species were centered on its genome-wide
-mean? On its own flanking sequence?
-14. Which version answers "are mouse promoters more GC-enriched than fly promoters?"
 
-### Part E: The x-axis
+10. What information are you missing about how to reproduce this figure?
 
-15. The flanks and body length differ between species. Why might they have been set
-from each species' median gene size?
-16. Is the TSS spike's *width* comparable between panels? Is a CpG island's physical
-size different in mouse and fly?
-17. Which features would you compare in base pairs, and which in gene-relative units?
+### Inspect the workflow
 
+Now open `compute_matrix.nf` (and its config). For each of the important points
+raised above, note which choice the workflow made and where. If the workflow
+doesn't make a choice explicitly, note what default it relies on.
+
+| Choice | Related question(s) | Your prediction | What the workflow does | Where (process / line) |
+|---|---|---|---|---|
+| GC track source and window size | 4, 5, 8 | | | |
+| Gene set and one transcript per gene | 7 | | | |
+| `computeMatrix` mode | 7, 11 | | | |
+| Body length per species (`--regionBodyLength`) | 11 | | | |
+| Flanks per species (`-b` / `-a`) | 11 | | | |
+| Bin size (`--binSize`) | 11 | | | |
+
+
+### Part D: Does it change the interpretation?
+
+Look at your outputs in `results/`, and at the variants your instructor shows
+with different bin sizes, and body length scaling.
+
+14. Which choices changed the *shape* of the profile, and which only changed its
+height or smoothness?
+
+15. In Example 1, changing the scaling didn't change the shape of any track. Here,
+changing the bin size and body length did. What's different about these
+transformations?
+
+16. The GC track has 5 bp resolution. What does a profile with a 5 bp bin show? What
+would a 1 bp bin show?
+
+17. When fly gene bodies are stretched to mouse's body length, does the profile look
+more or less detailed? Is that detail real?
+
+18. How do you think the values for flanking (1k for dm6, 3k for mm10) were chosen?
+
+### Part E: Comparing the species fairly (hypotheticals)
+
+Suppose the authors wanted to claim that mouse promoters are more GC-enriched than
+fly promoters. As in Example 1, describe what you might do at a high level.
+
+19. The two panels use different y-axis and color ranges. What would you change so
+the species can be compared by eye, and what would that hide?
+
+20. Each genome has a different baseline GC content. How would you make "enriched"
+mean the same thing in both species?
+
+21. With `scale-regions`, the x-axis is gene-relative and differs between species.
+A CpG island has roughly the same physical size in both. How could you compare the
+TSS region in real base pairs? (Hint: `reference-point` mode, or an unscaled region
+at the TSS.)
 
 ### Part F: What would you need to reproduce it?
 
 | What you need | What we know (and from where) | Still missing or assumed |
 |---|---|---|
-| Genome builds | Mouse mm9 (from the file name `GCcontent_Mm9_50_5.bw`) | Fly assembly (probably dm3, the build current at the same time) |
-| GC track | Values are fractions, roughly 0.2–0.7 (axes); likely 50 bp windows with a 5 bp step (file name) | Window size and step confirmed; overlapping or not; how Ns and masked bases were handled |
-| Gene annotation | One row per gene, with strand (heatmap rows) | Source (RefSeq, Ensembl, FlyBase); which genes were included; one transcript per gene, and which one |
-| `computeMatrix` mode | `scale-regions`: both TSS and TES are marked (x-axis) | — |
-| Flanks | Fly 1 kb, mouse 3 kb (x-axis) | — |
-| Gene body length | — | `--regionBodyLength` for each species; whether there are unscaled TSS/TES regions |
-| Bin size | — | `--binSize` in `computeMatrix` (a second round of smoothing on top of the windows) |
-| Missing data | — | Missing values treated as zero or skipped; all-zero genes dropped |
-| Summary | One average profile per species (top panels) | Mean vs. median |
-| Heatmap | Separate color limits per species (fly ~0.2–0.64, mouse ~0.23–0.68); yellow-green-blue color map | Sort order (default: descending mean); `--zMin`/`--zMax`, or autoscaled |
-| Profile y-axis | Different for each species (fly 0.33–0.50, mouse 0.4–0.7) | Set by hand or autoscaled |
+| | | |
+| | | |
+| | | |
+| | | |
+| | | |
+| | | |
+| | | |
+| | | |
+
+Once you've filled in your table, compare it with
+[`comparison/example2/reproduce.md`](comparison/example2/reproduce.md).
+
+### Write it up
+
+22. Name the one choice that matters most for comparing the two species, and
+explain why.
+
+23. Sketch how you would determine that choice if you were reproducing the figure
+yourself: **where** would you get the data, **what format** is it in, and **what
+would you calculate**?
